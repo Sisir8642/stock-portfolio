@@ -1,6 +1,6 @@
 import React from 'react';
 import { Edit2, Trash2 } from 'lucide-react';
-import { Stock } from '../../types/stock.types';
+import type { Stock } from '../../types/stock.types';
 
 interface PortfolioTableProps {
   stocks: Stock[];

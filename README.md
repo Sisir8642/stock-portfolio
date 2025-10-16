@@ -1,73 +1,122 @@
-# React + TypeScript + Vite
+# Stock Portfolio Manager
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A modern, feature-rich stock portfolio management application built with React, TypeScript, and Zustand.
 
-Currently, two official plugins are available:
+## 🚀 Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+-  Real-time portfolio value tracking
+-  Interactive charts (Line & Bar) for stock visualization
+-  Add, edit, and delete stocks
+-  Search and filter functionality
+-  Sort by ticker, gain/loss, or value
+-  LocalStorage persistence
+-  Responsive design
+-  Form validation
+-  Comprehensive test coverage
 
-## React Compiler
+## 🛠️ Tech Stack
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- **Frontend**: React 18 + TypeScript
+- **State Management**: Zustand
+- **Charts**: Recharts
+- **Styling**: TailwindCSS
+- **Icons**: Lucide React
+- **Testing**: Vitest + React Testing Library
+- **Build Tool**: Vite
 
-## Expanding the ESLint configuration
+## 📦 Installation
+```bash
+# Clone the repository
+git clone 
+cd stock-portfolio
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+# Install dependencies
+npm install
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+# Run development server
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## 🧪 Running Tests
+```bash
+# Run tests
+npm test
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+# Run tests with UI
+npm run test:ui
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+# Run tests with coverage
+npm run test:coverage
 ```
+
+
+# Usage
+
+### Adding a Stock
+1. Click the "Add Stock" button
+2. Fill in the required fields:
+   - Ticker Symbol (1-5 uppercase letters)
+   - Company Name
+   - Quantity (positive number)
+   - Purchase Price
+   - Date of Purchase
+3. Click "Add Stock" to save
+
+### Editing a Stock
+1. Click the edit icon next to any stock
+2. Update the desired fields
+3. Click "Update Stock" to save changes
+
+### Deleting a Stock
+1. Click the delete icon next to any stock
+2. Confirm the deletion in the popup dialog
+
+### Filtering & Sorting
+- Use the search bar to filter by ticker or company name
+- Select sort criteria from the dropdown (Ticker, Gain/Loss, Value)
+- Toggle sort order (ascending/descending) with the arrow button
+
+##  Features in Detail
+
+### Portfolio Summary
+- **Portfolio Value**: Total current value of all stocks
+- **Total Gain/Loss**: Difference between current and purchase values
+- **Total Stocks**: Number of stocks in portfolio
+
+### Charts
+- **Line Chart**: Shows stock price trends over time
+- **Bar Chart**: Displays trading volume
+
+### Data Persistence
+- Portfolio data is automatically saved to browser's localStorage
+- Data persists across browser sessions
+
+## Test Coverage
+
+Tests include:
+- Zustand store operations (add, update, delete)
+- Component rendering
+- User interactions
+- Form validation
+- Calculations (gain/loss)
+
+##  Deployment
+```bash
+# Build for production
+npm run build
+
+# Preview production build
+npm run preview
+```
+
+## License
+
+MIT License
+
+## Author
+
+Baburam Bista
+
+---
+
+Made with love using React + TypeScript

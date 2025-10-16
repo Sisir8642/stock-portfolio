@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
 import type { Stock } from '../types/stock.types';
 
 interface PortfolioState {
@@ -9,27 +10,34 @@ interface PortfolioState {
   getStockById: (id: string) => Stock | undefined;
 }
 
-export const usePortfolioStore = create<PortfolioState>((set, get) => ({
-  portfolio: [],
-  
-  addStock: (stock) =>
-    set((state) => ({
-      portfolio: [...state.portfolio, stock],
-    })),
-  
-  updateStock: (id, updatedStock) =>
-    set((state) => ({
-      portfolio: state.portfolio.map((stock) =>
-        stock.id === id ? { ...stock, ...updatedStock } : stock
-      ),
-    })),
-  
-  deleteStock: (id) =>
-    set((state) => ({
-      portfolio: state.portfolio.filter((stock) => stock.id !== id),
-    })),
-  
-  getStockById: (id) => {
-    return get().portfolio.find((stock) => stock.id === id);
-  },
-}));
+export const usePortfolioStore = create<PortfolioState>()(
+  persist(
+    (set, get) => ({
+      portfolio: [],
+      
+      addStock: (stock) =>
+        set((state) => ({
+          portfolio: [...state.portfolio, stock],
+        })),
+      
+      updateStock: (id, updatedStock) =>
+        set((state) => ({
+          portfolio: state.portfolio.map((stock) =>
+            stock.id === id ? { ...stock, ...updatedStock } : stock
+          ),
+        })),
+      
+      deleteStock: (id) =>
+        set((state) => ({
+          portfolio: state.portfolio.filter((stock) => stock.id !== id),
+        })),
+      
+      getStockById: (id) => {
+        return get().portfolio.find((stock) => stock.id === id);
+      },
+    }),
+    {
+      name: 'stock-portfolio-storage',
+    }
+  )
+);

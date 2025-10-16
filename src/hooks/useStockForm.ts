@@ -16,7 +16,6 @@ export const useStockForm = (initialStock?: Stock) => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
-    // Clear error when user starts typing
     if (errors[name as keyof StockFormData]) {
       setErrors((prev) => ({ ...prev, [name]: '' }));
     }

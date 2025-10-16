@@ -1,6 +1,6 @@
 import React from 'react';
 import { TrendingUp, DollarSign, Package } from 'lucide-react';
-import { Stock } from '../../types/stock.types';
+import type { Stock } from '../../types/stock.types';
 
 interface PortfolioSummaryProps {
   stocks: Stock[];

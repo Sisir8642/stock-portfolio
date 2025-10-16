@@ -1,12 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Plus } from 'lucide-react';
 import { usePortfolioStore } from './store/portfolioStore';
 import { PortfolioSummary } from './components/portfolio/PortfolioSummary';
 import { PortfolioTable } from './components/portfolio/PortfolioTable';
+import { PortfolioFilters } from './components/portfolio/PortfolioFilters';
 import { StockModal } from './components/portfolio/StockModal';
 import { StockLineChart } from './components/charts/StockLineChart';
 import { StockBarChart } from './components/charts/StockBarChart';
-import { Stock } from './types/stock.types';
+import type { Stock } from './types/stock.types';
 import { initialStocks, mockChartData } from './utils/mockData';
 
 function App() {
@@ -14,13 +15,51 @@ function App() {
   const [showModal, setShowModal] = useState(false);
   const [editingStock, setEditingStock] = useState<Stock | null>(null);
   const [activeTab, setActiveTab] = useState<'portfolio' | 'charts'>('portfolio');
+  
+  const [searchTerm, setSearchTerm] = useState('');
+  const [sortBy, setSortBy] = useState<'ticker' | 'gainLoss' | 'value'>('ticker');
+  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
 
-  // Initialize portfolio with mock data
   useEffect(() => {
     if (portfolio.length === 0) {
       initialStocks.forEach((stock) => addStock(stock));
     }
   }, []);
+
+  const filteredAndSortedPortfolio = useMemo(() => {
+    const filtered = portfolio.filter(
+      (stock) =>
+        stock.ticker.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        stock.companyName.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
+    filtered.sort((a, b) => {
+      let comparison = 0;
+
+      switch (sortBy) {
+        case 'ticker': {
+          comparison = a.ticker.localeCompare(b.ticker);
+          break;
+        }
+        case 'gainLoss': {
+          const gainA = (a.currentPrice - a.purchasePrice) * a.quantity;
+          const gainB = (b.currentPrice - b.purchasePrice) * b.quantity;
+          comparison = gainA - gainB;
+          break;
+        }
+        case 'value': {
+          const valueA = a.currentPrice * a.quantity;
+          const valueB = b.currentPrice * b.quantity;
+          comparison = valueA - valueB;
+          break;
+        }
+      }
+
+      return sortOrder === 'asc' ? comparison : -comparison;
+    });
+
+    return filtered;
+  }, [portfolio, searchTerm, sortBy, sortOrder]);
 
   const handleAddStock = (stockData: Omit<Stock, 'id' | 'currentPrice'>) => {
     const newStock: Stock = {
@@ -51,6 +90,10 @@ function App() {
     setEditingStock(null);
   };
 
+  const toggleSortOrder = () => {
+    setSortOrder((prev) => (prev === 'asc' ? 'desc' : 'asc'));
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
       <div className="max-w-7xl mx-auto p-6">
@@ -62,10 +105,8 @@ function App() {
           <p className="text-slate-600">Track and manage your investments</p>
         </div>
 
-        {/* Summary Cards */}
         <PortfolioSummary stocks={portfolio} />
 
-        {/* Tabs */}
         <div className="bg-white rounded-xl shadow-md mb-6">
           <div className="flex border-b">
             <button
@@ -90,7 +131,6 @@ function App() {
             </button>
           </div>
 
-          {/* Portfolio Tab */}
           {activeTab === 'portfolio' && (
             <div className="p-6">
               <div className="flex justify-between items-center mb-6">
@@ -104,15 +144,23 @@ function App() {
                 </button>
               </div>
 
+              <PortfolioFilters
+                searchTerm={searchTerm}
+                onSearchChange={setSearchTerm}
+                sortBy={sortBy}
+                onSortChange={setSortBy}
+                sortOrder={sortOrder}
+                onSortOrderToggle={toggleSortOrder}
+              />
+
               <PortfolioTable
-                stocks={portfolio}
+                stocks={filteredAndSortedPortfolio}
                 onEdit={handleEditClick}
                 onDelete={deleteStock}
               />
             </div>
           )}
 
-          {/* Charts Tab */}
           {activeTab === 'charts' && (
             <div className="p-6 space-y-6">
               <StockLineChart data={mockChartData} />
@@ -121,7 +169,6 @@ function App() {
           )}
         </div>
 
-        {/* Stock Modal */}
         <StockModal
           isOpen={showModal}
           onClose={handleModalClose}
